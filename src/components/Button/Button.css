@@ -1,0 +1,14 @@
+.btn {
+  font-family: "Roboto", sans-serif;
+  font-size: 1vw;
+  color: #223046;
+  border: 1px solid #BFC4CD;
+  border-radius: 5px;
+}
+
+.btn:hover {
+  color: aliceblue;
+  background: #223046;
+}
+
+/*# sourceMappingURL=Button.css.map */

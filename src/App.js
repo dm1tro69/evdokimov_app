@@ -9,6 +9,7 @@ import JPY from './image/JPY.png'
 import RUB from './image/RUB.png'
 import USD from './image/USD.png'
 import {RateContext} from "./context/RateContext";
+import axios from 'axios'
 
 class App extends React.Component{
     constructor(props){
@@ -28,17 +29,58 @@ class App extends React.Component{
             //calculator
             inputValue: 100,
             currencyValue: 'USD',
-            result: null
+            result: null,
+
+            //sample
+            sample: {base: 'USD', base2: 'RUB', date: '', course: ''},
+            sampleList: ''
 
         }
     }
 
+    baseHandler = (e) => {
+        this.setState({sample: {...this.state.sample, base: e.target.value}})
+    }
+
+    base2Handler = (e) => {
+        this.setState({sample: {...this.state.sample, base2: e.target.value}})
+    }
+
+    sampleDateHandler = (e) => {
+        this.setState({sample: {...this.state.sample, date: e.target.value}})
+    }
+
+
+    dataWrite = async () =>{
+
+       await fetch(`https://api.exchangeratesapi.io/${this.state.sample.date}?base=${this.state.sample.base}`)
+            .then((response)=> response.json()).then((response)=> {
+            this.setState({sample: {...this.state.sample, course: response.rates[this.state.sample.base2]}})
+        })
+
+        await axios.post('https://rateapp-879a9.firebaseio.com/sample.json', this.state.sample)
+            .then((response)=>{
+                return('')
+            })
+
+        await axios('https://rateapp-879a9.firebaseio.com/sample.json')
+            .then((response)=>{
+                this.setState({sampleList: response.data})
+            })
+
+
+
+    }
+
+
+
+
     inputValueHandler = (e) => {
-        this.setState({inputValue: e.target.value})
+        this.setState({inputValue: e.target.value, result: null})
     }
 
     currencyValueHandler = (e) =>{
-        this.setState({currencyValue: e.target.value})
+        this.setState({currencyValue: e.target.value, result: null})
     }
 
     calculatorHandler = async (value) => {
@@ -76,7 +118,11 @@ class App extends React.Component{
             value={{state: this.state,
                 inputValueHandler: this.inputValueHandler,
                 currencyValueHandler: this.currencyValueHandler,
-                calculatorHandler: this.calculatorHandler
+                calculatorHandler: this.calculatorHandler,
+                baseHandler: this.baseHandler,
+                base2Handler: this.base2Handler,
+                sampleDateHandler: this.sampleDateHandler,
+                dataWrite: this.dataWrite
             }}>
 
            <Layout/>
