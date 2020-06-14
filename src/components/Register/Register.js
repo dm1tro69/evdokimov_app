@@ -1,11 +1,10 @@
 import React, {Fragment, useContext} from "react";
 import './Register.scss'
 import {Button} from "../Button/Button";
-import {Input} from "../Input/Input";
 import {RateContext} from "../../context/RateContext";
 
 export const Register = () => {
-    const {renderInputs} = useContext(RateContext)
+    const {renderInputs, state, registerHandler} = useContext(RateContext)
 
     return(
         <Fragment>
@@ -17,7 +16,7 @@ export const Register = () => {
             </div>
 
             <div className={'modalBtn'}>
-                <Button text={'Регистрация'}/>
+                <Button text={'Регистрация'} disabled={!state.isFormValid} click={registerHandler}/>
 
             </div>
         </Fragment>

@@ -1,12 +1,11 @@
 import React, {Fragment, useContext} from "react";
 import './Login.scss'
 import {Button} from "../Button/Button";
-// import {Input} from "../Input/Input";
 import {RateContext} from "../../context/RateContext";
 
 export const Login = () => {
 
-    const {renderInputs} = useContext(RateContext)
+    const {renderInputs, state, loginHandler} = useContext(RateContext)
 
     return(
 
@@ -18,7 +17,10 @@ export const Login = () => {
             </div>
 
             <div className={'modalBtn'}>
-                <Button text={'Войти'}/>
+                <Button
+                    click={loginHandler}
+                    disabled={!state.isFormValid}
+                    text={'Войти'}/>
 
             </div>
         </Fragment>

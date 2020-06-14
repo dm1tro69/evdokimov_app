@@ -26,6 +26,9 @@ class App extends React.Component{
 
         this.state = {
 
+            auth: false,
+            error: '',
+
             formControls: {
                 email: {  value: '',
                     type: 'email',
@@ -76,10 +79,59 @@ class App extends React.Component{
             sample: {base: 'USD', base2: 'RUB', date: '', course: ''},
             sampleList: '',
 
-            showModal: false
+            showModal: false,
+            isFormValid: false
 
 
 
+        }
+
+    }
+
+
+    loginHandler = async () => {
+        const authData = {
+            email: this.state.formControls.email.value,
+            password: this.state.formControls.password.value,
+            returnSecureToken: true
+        }
+
+
+        try{
+            const response = await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDaFXPDC4sMqJqjB7yDuN6XzayJFHdMU9k', authData)
+            if(response.data.idToken){
+                const formControls = {...this.state.formControls}
+                formControls.email.value = ''
+                formControls.password.value = ''
+                this.setState({auth: true, showModal: false, error: '', formControls})
+            }
+
+        }catch (e) {
+            console.log(e)
+            this.setState({error: 'ошибка'})
+        }
+
+    }
+    registerHandler = async () => {
+        const authData = {
+            email: this.state.formControls.email.value,
+            password: this.state.formControls.password.value,
+            returnSecureToken: true
+        }
+
+
+        try{
+            const response = await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDaFXPDC4sMqJqjB7yDuN6XzayJFHdMU9k', authData)
+            if(response.data.idToken){
+                const formControls = {...this.state.formControls}
+                formControls.email.value = ''
+                formControls.password.value = ''
+                this.setState({auth: true, showModal: false, error: '', formControls})
+            }
+            
+        }catch (e) {
+            console.log(e)
+            this.setState({error: 'ошибка'})
         }
 
     }
@@ -131,7 +183,13 @@ class App extends React.Component{
 
         formControls[controlName] = control
 
-        this.setState({formControls})
+        let isFormValid = true
+
+        Object.keys(formControls).forEach(name =>{
+            isFormValid = formControls[name].valid && isFormValid
+        })
+
+        this.setState({formControls, isFormValid})
 
 
     }
@@ -308,7 +366,9 @@ class App extends React.Component{
                     sampleRemove: this.sampleRemove,
                     renderInputs: this.renderInputs,
                     modalShowHandler: this.modalShowHandler,
-                    modalHideHandler: this.modalHideHandler
+                    modalHideHandler: this.modalHideHandler,
+                    loginHandler: this.loginHandler,
+                    registerHandler: this.registerHandler
                 }}>
 
                 <Dark showModal={this.state.showModal} modalShowHandler={this.modalShowHandler}/>
