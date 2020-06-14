@@ -5,7 +5,7 @@ import {Button} from "../../components/Button/Button";
 
 export const Sample = () => {
 
-    const {state, sampleDateHandler, baseHandler, base2Handler, dataWrite} = useContext(RateContext)
+    const {state, sampleDateHandler, baseHandler, base2Handler, dataWrite, sampleRemove} = useContext(RateContext)
 
     return(
         <div className={'sample'}>
@@ -48,7 +48,7 @@ export const Sample = () => {
                                     <span><img src={state.currency[state.sampleList[item].base].flag} alt={item}/>&nbsp;{state.sampleList[item].base}</span>
                                     <span>{state.sampleList[item].date}</span>
                                     <span>{`${state.sampleList[item].course } ${state.sampleList[item].base2}`}</span>
-                                    <button><i className={'fa fa-times'}></i></button>
+                                    <button onClick={()=> sampleRemove(item)}><i className={'fa fa-times'}></i></button>
 
 
                                 </li>
